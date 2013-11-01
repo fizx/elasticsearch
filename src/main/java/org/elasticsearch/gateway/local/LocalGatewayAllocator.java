@@ -153,31 +153,31 @@ public class LocalGatewayAllocator extends AbstractComponent implements GatewayA
 
             // check if the counts meets the minimum set
             int requiredAllocation = 1;
-            try {
-                IndexMetaData indexMetaData = routingNodes.metaData().index(shard.index());
-                String initialShards = indexMetaData.settings().get(INDEX_RECOVERY_INITIAL_SHARDS, settings.get(INDEX_RECOVERY_INITIAL_SHARDS, this.initialShards));
-                if ("quorum".equals(initialShards)) {
-                    if (indexMetaData.numberOfReplicas() > 1) {
-                        requiredAllocation = ((1 + indexMetaData.numberOfReplicas()) / 2) + 1;
-                    }
-                } else if ("quorum-1".equals(initialShards) || "half".equals(initialShards)) {
-                    if (indexMetaData.numberOfReplicas() > 2) {
-                        requiredAllocation = ((1 + indexMetaData.numberOfReplicas()) / 2);
-                    }
-                } else if ("one".equals(initialShards)) {
-                    requiredAllocation = 1;
-                } else if ("full".equals(initialShards) || "all".equals(initialShards)) {
-                    requiredAllocation = indexMetaData.numberOfReplicas() + 1;
-                } else if ("full-1".equals(initialShards) || "all-1".equals(initialShards)) {
-                    if (indexMetaData.numberOfReplicas() > 1) {
-                        requiredAllocation = indexMetaData.numberOfReplicas();
-                    }
-                } else {
-                    requiredAllocation = Integer.parseInt(initialShards);
-                }
-            } catch (Exception e) {
-                logger.warn("[{}][{}] failed to derived initial_shards from value {}, ignore allocation for {}", shard.index(), shard.id(), initialShards, shard);
-            }
+            // try {
+            //     IndexMetaData indexMetaData = routingNodes.metaData().index(shard.index());
+            //     String initialShards = indexMetaData.settings().get(INDEX_RECOVERY_INITIAL_SHARDS, settings.get(INDEX_RECOVERY_INITIAL_SHARDS, this.initialShards));
+            //     if ("quorum".equals(initialShards)) {
+            //         if (indexMetaData.numberOfReplicas() > 1) {
+            //             requiredAllocation = ((1 + indexMetaData.numberOfReplicas()) / 2) + 1;
+            //         }
+            //     } else if ("quorum-1".equals(initialShards) || "half".equals(initialShards)) {
+            //         if (indexMetaData.numberOfReplicas() > 2) {
+            //             requiredAllocation = ((1 + indexMetaData.numberOfReplicas()) / 2);
+            //         }
+            //     } else if ("one".equals(initialShards)) {
+            //         requiredAllocation = 1;
+            //     } else if ("full".equals(initialShards) || "all".equals(initialShards)) {
+            //         requiredAllocation = indexMetaData.numberOfReplicas() + 1;
+            //     } else if ("full-1".equals(initialShards) || "all-1".equals(initialShards)) {
+            //         if (indexMetaData.numberOfReplicas() > 1) {
+            //             requiredAllocation = indexMetaData.numberOfReplicas();
+            //         }
+            //     } else {
+            //         requiredAllocation = Integer.parseInt(initialShards);
+            //     }
+            // } catch (Exception e) {
+            //     logger.warn("[{}][{}] failed to derived initial_shards from value {}, ignore allocation for {}", shard.index(), shard.id(), initialShards, shard);
+            // }
 
             // not enough found for this shard, continue...
             if (numberOfAllocationsFound < requiredAllocation) {
